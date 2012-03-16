@@ -91,6 +91,13 @@ class sfGuardSecurityUser extends sfBasicSecurityUser
       return true;
     }
 
+    // Not very well.
+    // Used by the OcariMenu to check if a user don't have a credential
+    if (!is_array($credential) && 0 === strpos($credential, '!'))
+    {
+      return !in_array(substr($credential, 1), $this->credentials);
+    }
+
     return parent::hasCredential($credential, $useAnd);
   }
 
@@ -202,7 +209,7 @@ class sfGuardSecurityUser extends sfBasicSecurityUser
   {
     if (!$this->user && $id = $this->getAttribute('user_id', null, 'sfGuardSecurityUser'))
     {
-      $this->user = Doctrine_Core::getTable('sfGuardUser')->find($id);
+      $this->user = $this->findGuardUser($id);
 
       if (!$this->user)
       {
@@ -214,6 +221,17 @@ class sfGuardSecurityUser extends sfBasicSecurityUser
     }
 
     return $this->user;
+  }
+
+  /**
+   * Find sfGuardUser by id.
+   *
+   * @param  int $id User id
+   * @return sfGuardUser
+   */
+  protected function findGuardUser($id)
+  {
+    return Doctrine_Core::getTable('sfGuardUser')->find($id);
   }
 
   /**

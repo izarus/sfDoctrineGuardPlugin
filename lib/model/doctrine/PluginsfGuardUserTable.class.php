@@ -20,7 +20,7 @@ abstract class PluginsfGuardUserTable extends Doctrine_Table
    */
   public function retrieveByUsername($username, $isActive = true)
   {
-    $query = Doctrine_Core::getTable('sfGuardUser')->createQuery('u')
+    $query = $this->createQuery('u')
       ->where('u.username = ?', $username)
       ->addWhere('u.is_active = ?', $isActive)
     ;
@@ -44,5 +44,26 @@ abstract class PluginsfGuardUserTable extends Doctrine_Table
     ;
 
     return $query->fetchOne();
+  }
+
+  /**
+   * Get choices
+   *
+   * @return array
+   */
+  public function getChoices()
+  {
+    $q = $this->createQuery('u')
+      ->select('u.id, u.username')
+      ->orderBy('u.username');
+
+    $choices = array();
+
+    foreach ($q->fetchArray() as $type)
+    {
+      $choices[$type['id']] = trim($type['username']);
+    }
+
+    return $choices;
   }
 }

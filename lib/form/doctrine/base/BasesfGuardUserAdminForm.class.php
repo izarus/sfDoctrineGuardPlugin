@@ -22,7 +22,8 @@ class BasesfGuardUserAdminForm extends BasesfGuardUserForm
       $this['created_at'],
       $this['updated_at'],
       $this['salt'],
-      $this['algorithm']
+      $this['algorithm'],
+      $this['is_super_admin']
     );
 
     $this->widgetSchema['groups_list']->setLabel('Groups');

@@ -63,7 +63,7 @@ abstract class PluginsfGuardUser extends BasesfGuardUser
     }
     $this->setAlgorithm($algorithmAsStr);
 
-    $this->_set('password', call_user_func_array($algorithm, array($salt.$password)));
+    $this->_set('password', $algorithm($salt.$password));
   }
 
   /**
@@ -76,12 +76,10 @@ abstract class PluginsfGuardUser extends BasesfGuardUser
   {
     if ($callable = sfConfig::get('app_sf_guard_plugin_check_password_callable'))
     {
-      return call_user_func_array($callable, array($this->getUsername(), $password, $this));
+      return $callable($this->getUsername(), $password, $this);
     }
-    else
-    {
-      return $this->checkPasswordByGuard($password);
-    }
+
+    return $this->checkPasswordByGuard($password);
   }
 
   /**
@@ -103,7 +101,7 @@ abstract class PluginsfGuardUser extends BasesfGuardUser
       throw new sfException(sprintf('The algorithm callable "%s" is not callable.', $algorithm));
     }
 
-    return $this->getPassword() == call_user_func_array($algorithm, array($this->getSalt().$password));
+    return $this->getPassword() == $algorithm($this->getSalt().$password);
   }
 
   /**
