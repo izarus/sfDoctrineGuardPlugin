@@ -10,15 +10,15 @@
 
 /**
  * Processes the "remember me" cookie.
- * 
+ *
  * This filter should be added to the application filters.yml file **above**
  * the security filter:
- * 
+ *
  *    remember_me:
  *      class: sfGuardRememberMeFilter
- * 
+ *
  *    security: ~
- * 
+ *
  * @package    symfony
  * @subpackage plugin
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
@@ -43,7 +43,9 @@ class sfGuardRememberMeFilter extends sfFilter
       $cookie = $this->context->getRequest()->getCookie($cookieName)
     )
     {
-      $q = Doctrine_Core::getTable('sfGuardUser')->createQuery('u')
+      $model = sfConfig::get('app_sf_guard_user_model', 'sfGuardUser');
+
+      $q = Doctrine_Core::getTable($model)->createQuery('u')
         ->select('u.*')
         ->innerJoin('u.RememberKeys r')
         ->where('u.is_active = ?', true)
