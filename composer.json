@@ -1,0 +1,16 @@
+{
+    "name": "lexpress/sf-doctrine-guard-plugin",
+    "type": "symfony1-installer",
+    "description": "Identity management plugin for symfony",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jonathan H. Wage",
+            "email": "jonwage@gmail.com",
+            "role": "Creator"
+        }
+    ],
+    "require": {
+        "composer/installers": "*"
+    }
+}
