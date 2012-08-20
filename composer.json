@@ -1,6 +1,6 @@
 {
     "name": "lexpress/sf-doctrine-guard-plugin",
-    "type": "symfony1-installer",
+    "type": "symfony1-plugin",
     "description": "Identity management plugin for symfony",
     "license": "MIT",
     "authors": [
