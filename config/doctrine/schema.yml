@@ -4,6 +4,7 @@ sfGuardGroup:
     name:
       type: string(255)
       unique: true
+      notnull: true
     description: string(1000)
   relations:
     Users:
@@ -25,6 +26,7 @@ sfGuardPermission:
     name:
       type: string(255)
       unique: true
+      notnull: true
     description: string(1000)
 
 sfGuardGroupPermission:
