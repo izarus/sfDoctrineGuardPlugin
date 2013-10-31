@@ -11,6 +11,6 @@
         }
     ],
     "require": {
-        "composer/installers": "*"
+        "composer/installers": "~1.0"
     }
 }
