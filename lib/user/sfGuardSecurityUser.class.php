@@ -226,6 +226,15 @@ class sfGuardSecurityUser extends sfBasicSecurityUser
   }
 
   /**
+   * Returns the ID of related sfGuardUser
+   * @return integer
+   */
+  public function getGuardUserId()
+  {
+    return $this->getAttribute('user_id', null, 'sfGuardSecurityUser');
+  }
+
+  /**
    * Find sfGuardUser by id.
    *
    * @param  int $id User id
@@ -302,7 +311,7 @@ class sfGuardSecurityUser extends sfBasicSecurityUser
    * Returns whether or not the user belongs to the given group.
    *
    * @param string $name The group name
-   * 
+   *
    * @return boolean
    */
   public function hasGroup($name)
@@ -334,7 +343,7 @@ class sfGuardSecurityUser extends sfBasicSecurityUser
    * Returns whether or not the user has the given permission.
    *
    * @param string $name The permission name
-   * 
+   *
    * @return string
    */
   public function hasPermission($name)
