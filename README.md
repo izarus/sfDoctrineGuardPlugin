@@ -1,4 +1,4 @@
-# sfGuardDoctrine plugin (for symfony 1.4) #
+# sfDoctrineGuardPlugin
 
 The `sfDoctrineGuardPlugin` is a symfony plugin that provides authentication and
 authorization features above and beyond the standard security features of symfony.
@@ -7,9 +7,9 @@ It gives you the model (user, group and permission objects) and the modules
 (backend and frontend) to secure your symfony application in a minute in
 a configurable plugin.
 
-Beginning with version 5.0.0 (the 1.4 stable branch), `sfDoctrineGuardPlugin` also 
+Beginning with version 5.0.0 (the 1.4 stable branch), `sfDoctrineGuardPlugin` also
 provides the option of applying for an account through the site (this is disabled
-by default), and the ability to reset your password if you have forgotten it. 
+by default), and the ability to reset your password if you have forgotten it.
 For security, password reset requires that you know the email address associated with the
 account and be able to receive mail there. However applying for an account does not yet require receiving
 an email message in 5.0.0.
@@ -18,28 +18,25 @@ The 5.x series can require significant migration effort when moving from earlier
 
 ## Installation ##
 
-  * Install the plugin (via a package)
+  * Install the plugin (via composer)
 
-        symfony plugin:install sfDoctrineGuardPlugin
-
-  * Install the plugin (via a Subversion checkout)
-  
-        svn co http://svn.symfony-project.com/plugins/sfDoctrineGuardPlugin/trunk plugins/sfDoctrineGuardPlugin
+        composer require lexpress/sf-doctrine-guard-plugin
 
   * Activate the plugin in the `config/ProjectConfiguration.class.php`
-  
-        [php]
-        class ProjectConfiguration extends sfProjectConfiguration
+
+      ```php
+      class ProjectConfiguration extends sfProjectConfiguration
+      {
+        public function setup()
         {
-          public function setup()
-          {
-            $this->enablePlugins(array(
-              'sfDoctrinePlugin', 
-              'sfDoctrineGuardPlugin',
-              '...'
-            ));
-          }
+          $this->enablePlugins(array(
+            'sfDoctrinePlugin',
+            'sfDoctrineGuardPlugin',
+            '...'
+          ));
         }
+      }
+      ```
 
   * Rebuild your model
 
@@ -72,7 +69,7 @@ The 5.x series can require significant migration effort when moving from earlier
                 .settings:
                   enabled_modules:      [default, sfGuardGroup, sfGuardUser, sfGuardPermission]
 
-		PLEASE NOTE: these modules are NOT SECURED by default, because we can't guess what you want your policies to be. Please read the "Secure your application" section below.
+    PLEASE NOTE: these modules are NOT SECURED by default, because we can't guess what you want your policies to be. Please read the "Secure your application" section below.
 
     * For your frontend application: sfGuardAuth
 
@@ -88,7 +85,6 @@ The 5.x series can require significant migration effort when moving from earlier
 
   * Optionally add the "Remember Me" filter to `filters.yml` above the security filter:
 
-        [yml]
         remember_me:
           class: sfGuardRememberMeFilter
 
@@ -96,13 +92,13 @@ The 5.x series can require significant migration effort when moving from earlier
 
 ### Upgrading ###
 
-The 5.0.x series adds several new tables, adds columns to existing tables and changes the names of all of the relations in the schema. 
+The 5.0.x series adds several new tables, adds columns to existing tables and changes the names of all of the relations in the schema.
 
 This requires changes of two kinds: database schema changes and, in some cases, changes to your code. We'll look at each of these issues in turn.
 
 #### Updating your Schema ####
 
-There are three basic changes in the schema: 
+There are three basic changes in the schema:
 
   * All primary key ID columns have been changed to 8-byte integers
   * New columns in the `sfGuardUser` table, which now contains `first_name`, `last_name` and `email_address` information
@@ -118,13 +114,13 @@ You can also leave the types of the IDs alone in your existing database. That is
 
 There are three new columns in the `sf_guard_user` table. You can add these with the following SQL statements:
 
-		ALTER TABLE sf_guard_user ADD COLUMN first_name varchar(255) DEFAULT NULL;
-		ALTER TABLE sf_guard_user ADD COLUMN last_name varchar(255) DEFAULT NULL;
-		ALTER TABLE sf_guard_user ADD COLUMN email_address varchar(255) DEFAULT '';
+    ALTER TABLE sf_guard_user ADD COLUMN first_name varchar(255) DEFAULT NULL;
+    ALTER TABLE sf_guard_user ADD COLUMN last_name varchar(255) DEFAULT NULL;
+    ALTER TABLE sf_guard_user ADD COLUMN email_address varchar(255) DEFAULT '';
 
 Next you should specify that the email address must be unique. This poses a problem if your users do not currently have an email address field at all in your existing system (for instance, you have no profile table, or there is no email address in it). You can work around it this way as a temporary solution:
 
-		UPDATE sf_guard_user SET email_address = username;
+    UPDATE sf_guard_user SET email_address = username;
 
 This ensures a unique setting although it does not actually provide a useful email address. If you have a profile table with email addresses, a better idea is to import your email addresses from there:
 
@@ -144,7 +140,7 @@ If you wish to stick with 4-byte IDs:
 
 If you have upgraded your IDs:
 
-		CREATE TABLE sf_guard_forgot_password (id BIGINT AUTO_INCREMENT, user_id BIGINT NOT NULL, unique_key VARCHAR(255), expires_at DATETIME NOT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL, INDEX user_id_idx (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE = INNODB;
+    CREATE TABLE sf_guard_forgot_password (id BIGINT AUTO_INCREMENT, user_id BIGINT NOT NULL, unique_key VARCHAR(255), expires_at DATETIME NOT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL, INDEX user_id_idx (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE = INNODB;
 
 #### Updating your Code ####
 
@@ -154,9 +150,9 @@ After updating your schema you will also need to update your code to account for
 
 First rebuild your model, form and filter base classes. This will not damage any custom code in your own model classes, as long as you followed standard practice and left the `Base` classes alone:
 
-		./symfony doctrine:build --all-classes
+    ./symfony doctrine:build --all-classes
 
-Second, check your Doctrine code for places where you use the relations that are defined for `sfGuardUser`, `sfGuardGroup`, etc. The names of these relations have been changed for convenience and to follow Symfony best practices. 
+Second, check your Doctrine code for places where you use the relations that are defined for `sfGuardUser`, `sfGuardGroup`, etc. The names of these relations have been changed for convenience and to follow Symfony best practices.
 
 The most frequently used relations that have changed are:
 
@@ -181,26 +177,28 @@ To secure a symfony application:
 
         login_module:           sfGuardAuth
         login_action:           signin
-        
+
         secure_module:          sfGuardAuth
         secure_action:          secure
 
   * Change the parent class in `myUser.class.php`
 
-        class myUser extends sfGuardSecurityUser
-        {
-        }
+      ```php
+      class myUser extends sfGuardSecurityUser
+      {
+      }
+      ```
 
   * Optionally add the following routing rules to `routing.yml`
 
         sf_guard_signin:
           url:   /login
           param: { module: sfGuardAuth, action: signin }
-        
+
         sf_guard_signout:
           url:   /logout
           param: { module: sfGuardAuth, action: signout }
-        
+
         sf_guard_register:
           url:   /register
           param: { module: sfGuardRegister, action: index }
@@ -294,10 +292,9 @@ If you want to customize or add methods to the sfGuardAuth:
     from `BasesfGuardAuthActions` (don't forget to include the `BasesfGuardAuthActions`
     as it can't be autoloaded by symfony)
 
-        <?php
-    
+      ```php
         require_once(sfConfig::get('sf_plugins_dir').'/sfDoctrineGuardPlugin/modules/sfGuardAuth/lib/BasesfGuardAuthActions.class.php');
-    
+
         class sfGuardAuthActions extends BasesfGuardAuthActions
         {
           public function executeNewAction()
@@ -305,6 +302,7 @@ If you want to customize or add methods to the sfGuardAuth:
             return $this->renderText('This is a new sfGuardAuth action.');
           }
         }
+      ```
 
 ## `sfGuardSecurityUser` class ##
 
@@ -323,10 +321,12 @@ or `$sf_user` in your templates.
 
 For example, to get the current username:
 
+  ```php
     $this->getUser()->getGuardUser()->getUsername()
 
     // or via the proxy method
     $this->getUser()->getUsername()
+  ```
 
 ## Superadmin ("super administrator") flag ##
 
@@ -362,6 +362,7 @@ call your method or function. Your function must takes 2 parameters, the first
 one is the username and the second one is the password. It must return true
 or false. Here is a template for such a function:
 
+  ```php
     function checkLDAPPassword($username, $password)
     {
       $user = LDAP::getUser($username);
@@ -374,6 +375,7 @@ or false. Here is a template for such a function:
         return false;
       }
     }
+  ```
 
 ## Change the algorithm used to store passwords ##
 
