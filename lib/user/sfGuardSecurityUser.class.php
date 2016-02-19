@@ -93,10 +93,10 @@ class sfGuardSecurityUser extends sfBasicSecurityUser
 
     // Not very well.
     // Used by the OcariMenu to check if a user don't have a credential
-    if (!is_array($credential) && 0 === strpos($credential, '!'))
-    {
-      return !in_array(substr($credential, 1), $this->credentials);
-    }
+    // if (!is_array($credential) && 0 === strpos($credential, '!'))
+    // {
+    //   return !in_array(substr($credential, 1), $this->credentials);
+    // }
 
     return parent::hasCredential($credential, $useAnd);
   }
