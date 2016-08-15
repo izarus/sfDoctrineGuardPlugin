@@ -9,14 +9,13 @@
  */
 
 /**
- * Add a permission to a user.
+ * Adds a sfGuard group to a user.
  *
  * @package    symfony
  * @subpackage task
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @author     Emanuele Panzeri <thepanz@gmail.com>
  */
-class sfGuardAddPermissionTask extends sfBaseTask
+class sfGuardUserGroupAddTask extends sfBaseTask
 {
   /**
    * @see sfTask
@@ -25,7 +24,7 @@ class sfGuardAddPermissionTask extends sfBaseTask
   {
     $this->addArguments(array(
       new sfCommandArgument('username', sfCommandArgument::REQUIRED, 'The user name'),
-      new sfCommandArgument('permission', sfCommandArgument::REQUIRED, 'The permission name'),
+      new sfCommandArgument('group', sfCommandArgument::REQUIRED, 'The group name'),
     ));
 
     $this->addOptions(array(
@@ -34,15 +33,15 @@ class sfGuardAddPermissionTask extends sfBaseTask
     ));
 
     $this->namespace = 'guard';
-    $this->name = 'add-permission';
-    $this->briefDescription = 'Adds a permission to a user';
+    $this->name = 'user:group-add';
+    $this->briefDescription = 'Adds a group to a user';
 
     $this->detailedDescription = <<<EOF
-The [guard:add-permission|INFO] task adds a permission to a user:
+The [guard:user:group-add|INFO] task adds a group to a user:
 
-  [./symfony guard:add-permission fabien admin|INFO]
+  [./symfony guard:user:group-add fabien admin-group|INFO]
 
-The user and the permission must exist in the database.
+The user and the group must exist in the database.
 EOF;
   }
 
@@ -62,8 +61,8 @@ EOF;
       throw new sfCommandException(sprintf('User "%s" does not exist.', $arguments['username']));
     }
 
-    $user->addPermissionByName($arguments['permission']);
+    $user->addGroupByName($arguments['group']);
 
-    $this->logSection('guard', sprintf('Add permission %s to user %s', $arguments['permission'], $arguments['username']));
+    $this->logSection('guard', sprintf('Add group %s to user %s', $arguments['group'], $arguments['username']));
   }
 }
