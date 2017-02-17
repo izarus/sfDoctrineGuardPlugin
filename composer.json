@@ -13,6 +13,11 @@
             "name": "Fabien Potencier",
             "email": "fabien.potencier@symfony-project.com",
             "role": "Creator"
+        },
+        {
+            "name": "Emanuele Panzeri",
+            "email": "thepanz@gmail.com",
+            "role": "Contributor"
         }
     ],
     "require": {
