@@ -125,12 +125,8 @@ abstract class PluginsfGuardUser extends BasesfGuardUser
 
     $ug->save($con);
 
-    // add group and permissions to local vars
-    $this->_groups[$group->getName()] = $group;
-    foreach ($group->getPermissions() as $permission)
-    {
-      $this->_allPermissions[$permission->getName()] = $permission;
-    }
+    // The sfGuarduserGroup invokes sfGuardUser::reloadGroupsAndPermissions() on a postSave() event, thus
+    // our _groups and _permissions will be null here.
   }
 
   /**
