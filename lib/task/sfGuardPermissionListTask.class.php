@@ -29,6 +29,8 @@ class sfGuardPermissionListTask extends sfBaseTask
     $this->addOptions(array(
       new sfCommandOption('with-groups', null, sfCommandOption::PARAMETER_NONE, 'Join with Groups'),
       new sfCommandOption('with-users', null, sfCommandOption::PARAMETER_NONE, 'Join with Users'),
+      new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', null),
+      new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
     ));
 
     $this->namespace = 'guard';
