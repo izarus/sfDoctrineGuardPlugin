@@ -9,22 +9,17 @@
  */
 
 /**
- * Add a group to a user.
+ * List the available Permissions.
  *
  * @package    symfony
  * @subpackage task
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @author     Emanuele Panzeri <thepanz@gmail.com>
  */
 class sfGuardPermissionListTask extends sfBaseTask
 {
-  /**
-   * @see sfTask
-   */
   protected function configure()
   {
-    $this->addArguments(array(
-    ));
+    $this->addArguments(array());
 
     $this->addOptions(array(
       new sfCommandOption('with-groups', null, sfCommandOption::PARAMETER_NONE, 'Join with Groups'),
@@ -36,17 +31,8 @@ class sfGuardPermissionListTask extends sfBaseTask
     $this->namespace = 'guard';
     $this->name = 'permission:list';
     $this->briefDescription = 'List Permissions';
-
-    $this->detailedDescription = <<<EOF
-The [guard:permission:list|INFO] list permissions:
-
-  [./symfony guard:list-groups|INFO]
-EOF;
   }
 
-  /**
-   * @see sfTask
-   */
   protected function execute($arguments = array(), $options = array())
   {
     $databaseManager = new sfDatabaseManager($this->configuration);

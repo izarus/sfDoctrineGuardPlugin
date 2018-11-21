@@ -9,7 +9,7 @@
  */
 
 /**
- * Add a permission to a user.
+ * List the group associated to a user.
  *
  * @package    symfony
  * @subpackage task
@@ -18,9 +18,6 @@
  */
 class sfGuardUserGroupsListTask extends sfBaseTask
 {
-  /**
-   * @see sfTask
-   */
   protected function configure()
   {
     $this->addArguments(array(
@@ -35,19 +32,8 @@ class sfGuardUserGroupsListTask extends sfBaseTask
     $this->name = 'user:groups-list';
     $this->namespace = 'guard';
     $this->briefDescription = 'List the Groups associated to a user';
-
-    $this->detailedDescription = <<<EOF
-The [guard:user:groups-list|INFO] task adds a permission to a user:
-
-  [./symfony guard:user:group-list fabien|INFO]
-
-The user must exist in the database.
-EOF;
   }
 
-  /**
-   * @see sfTask
-   */
   protected function execute($arguments = array(), $options = array())
   {
     $databaseManager = new sfDatabaseManager($this->configuration);
