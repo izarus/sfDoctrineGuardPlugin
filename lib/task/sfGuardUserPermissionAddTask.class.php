@@ -16,7 +16,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfGuardAddPermissionTask extends sfBaseTask
+class sfGuardUserPermissionAddTask extends sfBaseTask
 {
   /**
    * @see sfTask
@@ -34,13 +34,13 @@ class sfGuardAddPermissionTask extends sfBaseTask
     ));
 
     $this->namespace = 'guard';
-    $this->name = 'add-permission';
+    $this->name = 'user:permission-add';
     $this->briefDescription = 'Adds a permission to a user';
 
     $this->detailedDescription = <<<EOF
-The [guard:add-permission|INFO] task adds a permission to a user:
+The [guard:user:permission-add|INFO] task adds a permission to a user:
 
-  [./symfony guard:add-permission fabien admin|INFO]
+  [./symfony guard:user:permission-add fabien admin|INFO]
 
 The user and the permission must exist in the database.
 EOF;

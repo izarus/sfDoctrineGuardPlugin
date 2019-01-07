@@ -9,23 +9,19 @@
  */
 
 /**
- * Add a permission to a user.
+ * List the group associated to a user.
  *
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfGuardAddPermissionTask extends sfBaseTask
+class sfGuardUserGroupsListTask extends sfBaseTask
 {
-  /**
-   * @see sfTask
-   */
   protected function configure()
   {
     $this->addArguments(array(
       new sfCommandArgument('username', sfCommandArgument::REQUIRED, 'The user name'),
-      new sfCommandArgument('permission', sfCommandArgument::REQUIRED, 'The permission name'),
     ));
 
     $this->addOptions(array(
@@ -33,22 +29,11 @@ class sfGuardAddPermissionTask extends sfBaseTask
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
     ));
 
+    $this->name = 'user:groups-list';
     $this->namespace = 'guard';
-    $this->name = 'add-permission';
-    $this->briefDescription = 'Adds a permission to a user';
-
-    $this->detailedDescription = <<<EOF
-The [guard:add-permission|INFO] task adds a permission to a user:
-
-  [./symfony guard:add-permission fabien admin|INFO]
-
-The user and the permission must exist in the database.
-EOF;
+    $this->briefDescription = 'List the Groups associated to a user';
   }
 
-  /**
-   * @see sfTask
-   */
   protected function execute($arguments = array(), $options = array())
   {
     $databaseManager = new sfDatabaseManager($this->configuration);
@@ -62,8 +47,9 @@ EOF;
       throw new sfCommandException(sprintf('User "%s" does not exist.', $arguments['username']));
     }
 
-    $user->addPermissionByName($arguments['permission']);
-
-    $this->logSection('guard', sprintf('Add permission %s to user %s', $arguments['permission'], $arguments['username']));
+    $this->logSection('guard', sprintf('Listing groups associated to user %s', $arguments['username']));
+    foreach ($user->getGroupNames() as $groupName) {
+        $this->logSection('guard', sprintf(' - %s', $groupName));
+    }
   }
 }
